@@ -95,12 +95,16 @@ ambience = document.getElementById("ambience");
 
 if(ambience){
 ambience.volume = 0;
-ambience.play().catch(()=>{});
 }
 
 };
 
 function fadeInAudio(){
+
+if(!ambience) return;
+
+// FORCE PLAY on interaction (this is the missing piece)
+ambience.play().catch(()=>{});
 
 let vol=0;
 
@@ -123,8 +127,6 @@ document.removeEventListener("keydown",fadeInAudio);
 document.addEventListener("click",fadeInAudio);
 document.addEventListener("keydown",fadeInAudio);
 
-
-/* TYPEWRITER EFFECT */
 
 function typeWriter(text, element, speed=18){
 element.innerHTML="";
@@ -283,6 +285,7 @@ showScene("intro");
 
 </body>
 </html>
+
 
 
 
