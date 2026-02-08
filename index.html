@@ -7,62 +7,19 @@
 
 <style>
 
-/* ===== BODY + BREATHING DARKNESS ===== */
-
 body{
 margin:0;
-overflow-x:hidden;
-background:black;
-font-family:'EB Garamond', serif;
-color:#eee;
-display:flex;
-justify-content:center;
-animation:breathingDark 12s infinite alternate;
-}
-
-@keyframes breathingDark{
-0%{filter:brightness(0.9);}
-100%{filter:brightness(1);}
-}
-
-/* ===== BACKGROUND IMAGE ===== */
-
-body::before{
-content:"";
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
 background:
 linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.9)),
 url("forest.jpg");
 background-size:cover;
 background-position:center;
-z-index:-3;
+background-attachment:fixed;
+color:#eee;
+font-family:'EB Garamond', serif;
+display:flex;
+justify-content:center;
 }
-
-/* ===== MOVING FOG LAYER ===== */
-
-body::after{
-content:"";
-position:fixed;
-top:0;
-left:0;
-width:200%;
-height:200%;
-background:url("https://i.imgur.com/8QZ7Z8K.png");
-opacity:0.08;
-animation:fogMove 80s linear infinite;
-z-index:-2;
-}
-
-@keyframes fogMove{
-from{transform:translate(0,0);}
-to{transform:translate(-50%,-20%);}
-}
-
-/* ===== MAIN GAME AREA ===== */
 
 #game{
 max-width:800px;
@@ -73,10 +30,7 @@ h1{
 font-family:'Cinzel', serif;
 text-align:center;
 letter-spacing:2px;
-text-shadow:0 0 10px rgba(255,255,255,0.3);
 }
-
-/* ===== STORY TEXT ===== */
 
 #story{
 white-space:pre-wrap;
@@ -85,8 +39,6 @@ font-size:20px;
 min-height:200px;
 animation:fadeIn 1s ease;
 }
-
-/* ===== CHOICES ===== */
 
 .choice{
 margin-top:15px;
@@ -99,10 +51,8 @@ transition:0.3s;
 
 .choice:hover{
 border-color:#aaa;
-box-shadow:0 0 15px rgba(255,255,255,0.4);
+box-shadow:0 0 12px rgba(255,255,255,0.3);
 }
-
-/* ===== BUTTON ===== */
 
 button{
 margin-top:20px;
@@ -130,12 +80,6 @@ to{opacity:1;}
 
 </div>
 
-<!-- AMBIENT FOREST SOUND -->
-
-<audio id="ambience" loop autoplay>
-<source src="https://cdn.pixabay.com/audio/2022/03/15/audio_6fcb6d4e2a.mp3" type="audio/mpeg">
-</audio>
-
 <script>
 
 let previousScene=null;
@@ -156,13 +100,20 @@ typing();
 }
 
 const storyData={
-  
+
+intro:{
+text:`Background Story (Subtle Death Hint)
+
+Willow Creek Trail is a quiet hiking path on the outskirts of town. Locals often walk it during the day, but at night strange things happen...
+
 A faint whisper drifts toward you from the trees, calling your name.`,
 startButton:true
 },
 
 start:{
-text:`What do you do?`,
+text:`Start of Game
+
+What do you do?`,
 choices:[
 { text:"Follow the whisper", next:"lanterns"},
 { text:"Ignore it and keep walking", next:"fail_mist"}
@@ -170,10 +121,52 @@ choices:[
 },
 
 lanterns:{
-text:`Two lanterns hover ahead: one flickering dimly, one glowing steadily.`,
+text:`Ahead, you see two lanterns hovering in the air: one flickering dimly, one glowing steadily.`,
 choices:[
 { text:"Pick up the dim lantern", next:"fail_dim"},
-{ text:"Pick up the steady lantern", next:"success"}
+{ text:"Pick up the steady lantern", next:"steady_lantern"},
+{ text:"Ignore both lanterns and go straight to the old ranger cabin", next:"fail_ghost_path"}
+]
+},
+
+fail_dim:{
+text:`The lantern flickers violently.
+
+Shadows pull you into darkness.
+
+The end.`
+},
+
+steady_lantern:{
+text:`The steady lantern feels warm. Symbols point to a front door and a back door.
+
+What do you do?`,
+choices:[
+{ text:"Enter the front door", next:"fail_front_door"},
+{ text:"Go to the back door", next:"inside_cabin"}
+]
+},
+
+fail_front_door:{
+text:`Shadows surge and engulf you.
+
+The end.`
+},
+
+inside_cabin:{
+text:`Inside you find a diary and a mirror.`,
+choices:[
+{ text:"Read the diary", next:"diary_path"},
+{ text:"Look into the mirror", next:"fail_mirror"}
+]
+},
+
+diary_path:{
+text:`"Follow the path of light."`,
+choices:[
+{ text:"Go to the grove immediately", next:"success"},
+{ text:"Stay in the cabin", next:"fail_cabin"},
+{ text:"Touch the shadows", next:"fail_inbetween"}
 ]
 },
 
@@ -185,7 +178,13 @@ You move on peacefully.
 The end.`
 },
 
-fail_dim:{ text:`Shadows pull you into darkness. The end.` },
+fail_cabin:{ text:`You dissolve into the cabin walls. The end.` },
+
+fail_inbetween:{ text:`You are trapped between worlds. The end.` },
+
+fail_mirror:{ text:`The reflection pulls you inside. The end.` },
+
+fail_ghost_path:{ text:`You vanish following your ghostly trail. The end.` },
 
 fail_mist:{ text:`You vanish into the mist. The end.` }
 
@@ -241,6 +240,8 @@ showScene("intro");
 
 </body>
 </html>
+
+
 
 
 
