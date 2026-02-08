@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>The Shadow in Willow Creek Trail</title>
+
+<style>
+
+body {
+    background: linear-gradient(270deg, #000, #111, #000);
+    background-size: 600% 600%;
+    animation: bgmove 20s ease infinite;
+}
+
+@keyframes bgmove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+body {
+
+    font-family: Arial;
+    color: white;
+    max-width: 800px;
+    margin: auto;
+    padding: 30px;
+    line-height: 1.7;
+
+
+    background:
+    linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)),
+    url("forest.jpg");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+
+}
+
+}
+
+#story {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.choice {
+    display: block;
+    margin: 10px 0;
+    padding: 12px;
+    background: #222;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.choice:hover {
+    background: ;
+}
+
+button {
+    margin-top:15px;
+    padding:12px;
+    background:#333;
+    color:white;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>The Shadow in Willow Creek Trail</h1>
+
+<div id="story"></div>
+
+<script>
+
+let previousScene = null;
+
+const storyData = {
+
+intro:{
+text:`Background Story (Subtle Death Hint)
+
+Willow Creek Trail is a quiet hiking path on the outskirts of town. Locals often walk it during the day, but at night, travelers report strange occurrences: whispers in the wind, lanterns appearing where no one lit them, and shadows moving against the moonlight.
+
+Some say the trail doesn’t always lead home. Those who try to rush through feel weightless, hear distant voices, or see paths that vanish. Tonight, you are walking along the trail. The moon barely lights the path. Your footsteps don’t seem to touch the ground, and the air feels heavy… almost alive.
+
+A faint whisper drifts toward you from the trees, calling your name.`,
+startButton:true
+},
+
+start:{
+text:`Start of Game
+
+What do you do?`,
+choices:[
+{ text:"Follow the whisper", next:"lanterns"},
+{ text:"Ignore it and keep walking", next:"fail_mist"}
+]
+},
+
+lanterns:{
+text:`Ahead, you see two lanterns hovering in the air: one flickering dimly, one glowing steadily.
+
+Do you:`,
+choices:[
+{ text:"Pick up the dim lantern", next:"fail_dim"},
+{ text:"Pick up the steady lantern", next:"steady_lantern"},
+{ text:"Ignore both lanterns and go straight to the old ranger cabin", next:"fail_ghost_path"}
+]
+},
+
+fail_dim:{
+text:`The lantern flickers violently. You see a shadow surge toward you, but it passes right through your hand. Something isn’t right.
+
+The shadows pull you into darkness.
+
+The end.`
+},
+
+steady_lantern:{
+text:`The steady lantern feels warm in your hand. You notice symbols on the ranger cabin doors: one pointing to the front door, one to the back door.
+
+Do you:`,
+choices:[
+{ text:"Enter the front door", next:"fail_front_door"},
+{ text:"Go to the back door", next:"inside_cabin"}
+]
+},
+
+fail_front_door:{
+text:`Shadows surge. You try to escape, but your hand passes through the doorframe. Something is holding you back…
+
+You are engulfed by the shadows.
+
+The end.`
+},
+
+inside_cabin:{
+text:`The back door opens easily. Inside, the air is thick. The lantern reveals a diary and a mirror. The diary glows faintly.
+
+Do you:`,
+choices:[
+{ text:"Read the diary", next:"diary_path"},
+{ text:"Look into the mirror", next:"fail_mirror"}
+]
+},
+
+diary_path:{
+text:`The diary mentions a hidden grove behind the cabin, where lanterns form a circle of light.
+
+"Follow the path of light. Only then will you move on."
+
+Do you:`,
+choices:[
+{ text:"Go to the grove immediately", next:"success"},
+{ text:"Stay in the cabin", next:"fail_cabin"},
+{ text:"Touch the shadows in the room", next:"fail_inbetween"}
+]
+},
+
+success:{
+text:`The grove is lit by lanterns forming a perfect circle. The shadows cannot enter. You feel weightless, lighter than air, and see a faint path leading upward, bathed in soft golden light.
+
+All the whispers, lanterns, and clues suddenly make sense: they were guiding you here, guiding you forward.
+
+You step forward along the glowing path, and a warm, peaceful breeze surrounds you. The trail fades behind you.
+
+It all makes sense now — you had already walked Willow Creek Trail after life, and every choice was guiding you to this road… a path forward, silently promised by the light.
+
+You move on peacefully.
+
+The end.`
+},
+
+fail_cabin:{
+text:`Shadows creep closer.
+
+You dissolve into the cabin walls, part of the trail now.
+
+The end.`
+},
+
+fail_inbetween:{
+text:`The shadows curl around you. You pass through them, feeling… nothing.
+
+You’re trapped in the in-between, unable to move on.
+
+The end.`
+},
+
+fail_mirror:{
+text:`Your reflection… isn’t you. It’s a pale, motionless version of yourself staring back.
+
+The shadow pulls you into the reflection.
+
+The end.`
+},
+
+fail_ghost_path:{
+text:`The trail leads deeper into the fog. You see footprints… but they are yours, ahead of you, as if you were walking in front of yourself.
+
+You vanish into the forest, following your own ghostly trail.
+
+The end.`
+},
+
+fail_mist:{
+text:`The whisper grows louder. A strange breeze brushes past you, but your footsteps make no sound. You feel a cold hand on your shoulder.
+
+You vanish into the mist — as if you were never there.
+
+The end.`
+}
+
+};
+
+function showScene(scene){
+
+const container=document.getElementById("story");
+container.innerHTML="";
+
+const p=document.createElement("div");
+p.innerText=storyData[scene].text;
+container.appendChild(p);
+
+if(storyData[scene].startButton){
+const btn=document.createElement("button");
+btn.innerText="Start Game";
+btn.onclick=()=>showScene("start");
+container.appendChild(btn);
+return;
+}
+
+if(storyData[scene].choices){
+
+storyData[scene].choices.forEach(choice=>{
+const btn=document.createElement("div");
+btn.className="choice";
+btn.innerText=choice.text;
+btn.onclick=()=>{
+previousScene=scene;
+showScene(choice.next);
+};
+container.appendChild(btn);
+});
+
+}else{
+
+if(previousScene){
+const backBtn=document.createElement("button");
+backBtn.innerText="⬅ Go Back to Previous Choice";
+backBtn.onclick=()=>showScene(previousScene);
+container.appendChild(backBtn);
+}
+
+}
+
+}
+
+showScene("intro");
+
+</script>
+
+</body>
+</html>
+
