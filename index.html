@@ -3,69 +3,69 @@
 <head>
 <title>The Shadow in Willow Creek Trail</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Cinzel&family=EB+Garamond&display=swap" rel="stylesheet">
+
 <style>
 
-body {
-    background: linear-gradient(270deg, #000, #111, #000);
-    background-size: 600% 600%;
-    animation: bgmove 20s ease infinite;
+body{
+margin:0;
+background:
+linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.9)),
+url("forest.jpg");
+background-size:cover;
+background-position:center;
+background-attachment:fixed;
+color:#eee;
+font-family:'EB Garamond', serif;
+display:flex;
+justify-content:center;
 }
 
-@keyframes bgmove {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+#game{
+max-width:800px;
+padding:60px 30px;
 }
 
-body {
-
-    font-family: Arial;
-    color: white;
-    max-width: 800px;
-    margin: auto;
-    padding: 50px;
-    line-height: 1.7;
-
-
-    background:
-    linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)),
-    url("forest.jpg");
-
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-
+h1{
+font-family:'Cinzel', serif;
+text-align:center;
+letter-spacing:2px;
 }
 
+#story{
+white-space:pre-wrap;
+line-height:1.8;
+font-size:20px;
+min-height:200px;
+animation:fadeIn 1s ease;
 }
 
-#story {
-    white-space: pre-wrap;
-    word-wrap: break-word;
+.choice{
+margin-top:15px;
+padding:14px;
+background:#111;
+border:1px solid #333;
+cursor:pointer;
+transition:0.3s;
 }
 
-.choice {
-    display: block;
-    margin: 10px 0;
-    padding: 12px;
-    background: #222;
-    border-radius: 8px;
-    cursor: pointer;
+.choice:hover{
+border-color:#aaa;
+box-shadow:0 0 12px rgba(255,255,255,0.3);
 }
 
-.choice:hover {
-    background: ;
+button{
+margin-top:20px;
+padding:12px;
+background:#111;
+border:1px solid #555;
+color:#ddd;
+cursor:pointer;
 }
 
-button {
-    margin-top:15px;
-    padding:12px;
-    background:#333;
-    color:white;
-    border:none;
-    border-radius:8px;
-    cursor:pointer;
+@keyframes fadeIn{
+from{opacity:0; transform:translateY(15px);}
+to{opacity:1;}
 }
 
 </style>
@@ -73,22 +73,38 @@ button {
 
 <body>
 
-<h1>The Shadow in Willow Creek Trail</h1>
+<div id="game">
 
+<h1>The Shadow in Willow Creek Trail</h1>
 <div id="story"></div>
+
+</div>
 
 <script>
 
-let previousScene = null;
+let previousScene=null;
 
-const storyData = {
+/* TYPEWRITER EFFECT */
+
+function typeWriter(text, element, speed=18){
+element.innerHTML="";
+let i=0;
+function typing(){
+if(i<text.length){
+element.innerHTML+=text.charAt(i);
+i++;
+setTimeout(typing,speed);
+}
+}
+typing();
+}
+
+const storyData={
 
 intro:{
 text:`Background Story (Subtle Death Hint)
 
-Willow Creek Trail is a quiet hiking path on the outskirts of town. Locals often walk it during the day, but at night, travelers report strange occurrences: whispers in the wind, lanterns appearing where no one lit them, and shadows moving against the moonlight.
-
-Some say the trail doesn’t always lead home. Those who try to rush through feel weightless, hear distant voices, or see paths that vanish. Tonight, you are walking along the trail. The moon barely lights the path. Your footsteps don’t seem to touch the ground, and the air feels heavy… almost alive.
+Willow Creek Trail is a quiet hiking path on the outskirts of town. Locals often walk it during the day, but at night strange things happen...
 
 A faint whisper drifts toward you from the trees, calling your name.`,
 startButton:true
@@ -105,9 +121,7 @@ choices:[
 },
 
 lanterns:{
-text:`Ahead, you see two lanterns hovering in the air: one flickering dimly, one glowing steadily.
-
-Do you:`,
+text:`Ahead, you see two lanterns hovering in the air: one flickering dimly, one glowing steadily.`,
 choices:[
 { text:"Pick up the dim lantern", next:"fail_dim"},
 { text:"Pick up the steady lantern", next:"steady_lantern"},
@@ -116,17 +130,17 @@ choices:[
 },
 
 fail_dim:{
-text:`The lantern flickers violently. You see a shadow surge toward you, but it passes right through your hand. Something isn’t right.
+text:`The lantern flickers violently.
 
-The shadows pull you into darkness.
+Shadows pull you into darkness.
 
 The end.`
 },
 
 steady_lantern:{
-text:`The steady lantern feels warm in your hand. You notice symbols on the ranger cabin doors: one pointing to the front door, one to the back door.
+text:`The steady lantern feels warm. Symbols point to a front door and a back door.
 
-Do you:`,
+What do you do?`,
 choices:[
 { text:"Enter the front door", next:"fail_front_door"},
 { text:"Go to the back door", next:"inside_cabin"}
@@ -134,17 +148,13 @@ choices:[
 },
 
 fail_front_door:{
-text:`Shadows surge. You try to escape, but your hand passes through the doorframe. Something is holding you back…
-
-You are engulfed by the shadows.
+text:`Shadows surge and engulf you.
 
 The end.`
 },
 
 inside_cabin:{
-text:`The back door opens easily. Inside, the air is thick. The lantern reveals a diary and a mirror. The diary glows faintly.
-
-Do you:`,
+text:`Inside you find a diary and a mirror.`,
 choices:[
 { text:"Read the diary", next:"diary_path"},
 { text:"Look into the mirror", next:"fail_mirror"}
@@ -152,71 +162,31 @@ choices:[
 },
 
 diary_path:{
-text:`The diary mentions a hidden grove behind the cabin, where lanterns form a circle of light.
-
-"Follow the path of light. Only then will you move on."
-
-Do you:`,
+text:`"Follow the path of light."`,
 choices:[
 { text:"Go to the grove immediately", next:"success"},
 { text:"Stay in the cabin", next:"fail_cabin"},
-{ text:"Touch the shadows in the room", next:"fail_inbetween"}
+{ text:"Touch the shadows", next:"fail_inbetween"}
 ]
 },
 
 success:{
-text:`The grove is lit by lanterns forming a perfect circle. The shadows cannot enter. You feel weightless, lighter than air, and see a faint path leading upward, bathed in soft golden light.
-
-All the whispers, lanterns, and clues suddenly make sense: they were guiding you here, guiding you forward.
-
-You step forward along the glowing path, and a warm, peaceful breeze surrounds you. The trail fades behind you.
-
-It all makes sense now — you had already walked Willow Creek Trail after life, and every choice was guiding you to this road… a path forward, silently promised by the light.
+text:`Lanterns form a circle of light.
 
 You move on peacefully.
 
 The end.`
 },
 
-fail_cabin:{
-text:`Shadows creep closer.
+fail_cabin:{ text:`You dissolve into the cabin walls. The end.` },
 
-You dissolve into the cabin walls, part of the trail now.
+fail_inbetween:{ text:`You are trapped between worlds. The end.` },
 
-The end.`
-},
+fail_mirror:{ text:`The reflection pulls you inside. The end.` },
 
-fail_inbetween:{
-text:`The shadows curl around you. You pass through them, feeling… nothing.
+fail_ghost_path:{ text:`You vanish following your ghostly trail. The end.` },
 
-You’re trapped in the in-between, unable to move on.
-
-The end.`
-},
-
-fail_mirror:{
-text:`Your reflection… isn’t you. It’s a pale, motionless version of yourself staring back.
-
-The shadow pulls you into the reflection.
-
-The end.`
-},
-
-fail_ghost_path:{
-text:`The trail leads deeper into the fog. You see footprints… but they are yours, ahead of you, as if you were walking in front of yourself.
-
-You vanish into the forest, following your own ghostly trail.
-
-The end.`
-},
-
-fail_mist:{
-text:`The whisper grows louder. A strange breeze brushes past you, but your footsteps make no sound. You feel a cold hand on your shoulder.
-
-You vanish into the mist — as if you were never there.
-
-The end.`
-}
+fail_mist:{ text:`You vanish into the mist. The end.` }
 
 };
 
@@ -226,8 +196,9 @@ const container=document.getElementById("story");
 container.innerHTML="";
 
 const p=document.createElement("div");
-p.innerText=storyData[scene].text;
 container.appendChild(p);
+
+typeWriter(storyData[scene].text,p);
 
 if(storyData[scene].startButton){
 const btn=document.createElement("button");
@@ -253,10 +224,10 @@ container.appendChild(btn);
 }else{
 
 if(previousScene){
-const backBtn=document.createElement("button");
-backBtn.innerText="⬅ Go Back to Previous Choice";
-backBtn.onclick=()=>showScene(previousScene);
-container.appendChild(backBtn);
+const back=document.createElement("button");
+back.innerText="⬅ Return to Previous Choice";
+back.onclick=()=>showScene(previousScene);
+container.appendChild(back);
 }
 
 }
@@ -269,6 +240,7 @@ showScene("intro");
 
 </body>
 </html>
+
 
 
 
